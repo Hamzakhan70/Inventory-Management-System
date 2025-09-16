@@ -22,6 +22,7 @@ model Product {
   quantity    Int
   supplier    Supplier  @relation(fields: [supplierId], references: [id])
   supplierId  Int
+  orderItems  OrderItem[]
   createdAt   DateTime  @default(now())
 }
 
@@ -34,4 +35,65 @@ model Supplier {
 }
 
 
-// 
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  customerId Int
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  status     String      @default("PENDING")
+  total      Float
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  items      OrderItem[]
+  payment    Payment?
+
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Float  // price at time of order
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int       @unique
+  amount    Float
+  status    String   // "PENDING" | "SUCCESS" | "FAILED"
+  method    String   // "STRIPE" | "COD"
+ stripeSessionId       String?   // optional
+stripePaymentIntentId String?   // ✅ new column
+  createdAt DateTime @default(now())
+  refund    Refund?
+}
+
+model Refund {
+  id        Int      @id @default(autoincrement())
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  paymentId Int      @unique
+  amount    Float
+  reason    String?
+  status    String   @default("PENDING") // PENDING, SUCCESS, FAILED
+  createdAt DateTime @default(now())
+}
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}

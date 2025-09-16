@@ -1,6 +1,6 @@
-import * as productService from "../services/productService.js";
-import { successResponse } from "../utils/response.js";
+import * as productService from "../services/product.service.js";
 import AppError from "../utils/AppError.js";
+import { successResponse } from "../utils/responce.js";
 
 export const createProduct = async (req, res, next) => {
   try {
