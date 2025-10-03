@@ -42,7 +42,7 @@ console.log('Raw body is Buffer:', Buffer.isBuffer(req.body));
   
   if (event.type === "checkout.session.completed") {
     const session = event.data.object;
-    console.log('Session data:', session);
+    console.log('Session data:----', session.payment_intent);
     
     // Check if orderId exists in metadata
     if (!session.metadata || !session.metadata.orderId) {

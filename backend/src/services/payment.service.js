@@ -35,7 +35,7 @@ export const createStripeSession = async (orderId) => {
       amount: order.total,
       status: "PENDING",
       method: "STRIPE",
- stripePaymentIntentId: null,   // leave null for now
+      stripePaymentIntentId: null,   // leave null for now
     stripeSessionId: session.id,   // save session id
     },
   });

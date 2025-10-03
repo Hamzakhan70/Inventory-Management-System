@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Only admin should access (middleware will be added later)
 router.post("/", refundController.createRefund);
-router.get("/", authenticate, isAdmin, refundController.getAllRefunds);
+router.get("/", refundController.getAllRefunds);
+// router.get("/", authenticate, isAdmin, refundController.getAllRefunds);
 
 export default router;

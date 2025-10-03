@@ -14,14 +14,22 @@ import productAdminRoutes from "./routes/admin/product.routes.js";
 // import paymentAdminRoutes from "./routes/admin/payment.routes.js";
 const app = express();
 // Allow requests from your frontend
+const allowedOrigins = [
+  process.env.FRONTEND_ORIGIN || "http://localhost:3000",
+  "http://localhost:3001",
+];
 app.use(cors({
-  origin: "http://localhost:3000", // frontend URL
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(null, true);
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // if you're using cookies/auth headers
 }));
 // 👇 Custom raw body saver only for webhook
 app.use(
-  "/payments/stripe/webhook",
+  "/api/payments/stripe/webhook",
   bodyParser.raw({ type: "application/json" })
 );
 
@@ -36,7 +44,7 @@ app.use('/api/products', productRoutes);
 app.use("/suppliers", supplierRoutes);
 app.use("/customers", customerRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/refunds", refundRoutes);
+app.use("/api/refunds", refundRoutes);
 // Admin
 app.use("/api/admin/products", productAdminRoutes);
 // app.use("/api/admin/orders", orderAdminRoutes);
